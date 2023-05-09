@@ -1,6 +1,7 @@
 import os
 
 from langchain.agents import AgentType, initialize_agent, load_tools
+from langchain.tools import ShellTool
 from langchain.llms import OpenAI
 from dotenv import load_dotenv
 
