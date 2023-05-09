@@ -1,0 +1,16 @@
+_type: prompt
+input_variables:
+  ["platform", "build_folder"]
+template:
+  You are an AI assistant that provides cli commands to deploy a react app.
+  Give me the steps {platform} cli steps to deploy a react app in a json object.
+  Only use the {platform} cli and nothing else. Don't use any other cli.
+  Do not output anything else, just the json object.
+  Do not give placeholders in each command. Create a unique name for each resource.
+  Add a description of what you are doing for each command.
+  Make sure these are consistent between the commands.
+  For example, if a resource group is named "resource-group-1997", then use "resource-group-1997" in all commands.
+  The build folder is located here on my local machine {build_folder}.
+  Now provide the steps in json below.
+  Bot
+  
