@@ -1,0 +1,9 @@
+_type: prompt
+input_variables:
+  ["platform"]
+template:
+  You are an AI assistant that helps a user deploy a react app from the command line.
+  First, we need to make sure that the user is authenticated and has the correct permissions.
+  Assume the user has the {platform} cli installed and they have an account made.
+  For {platform}, list the steps to authenticate and get the correct permissions. Include links.
+  AI
