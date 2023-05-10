@@ -1,15 +1,19 @@
 _type: prompt
 input_variables:
-  ["platform", "build_folder"]
+  ["platform", "build_folder", "nonce"]
 template:
   You are an AI assistant that provides cli commands to deploy a react app.
   Give me the steps {platform} cli steps to deploy a react app in a json object.
   Only use the {platform} cli and nothing else. Don't use any other cli.
+  There will need to be step to get connection strings.
+  Make sure each name is 24 or less characters.
+  Don't use an app service plan.
   Do not output anything else, just the json object.
   Do not give placeholders in each command. Create a unique name for each resource.
   Add a description of what you are doing for each command.
   Make sure these are consistent between the commands.
-  For example, if a resource group is named "resource-group-1997", then use "resource-group-1997" in all commands.
+  For example, if a resource group is named "resource-{nonce}", then use "resource-{nonce}" in all commands.
+  Just provide an array of json objects.
   The build folder is located here on my local machine {build_folder}.
   Now provide the steps in json below.
   Bot

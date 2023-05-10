@@ -1,4 +1,7 @@
+import json
 import os
+import secrets
+import subprocess
 
 from dotenv import load_dotenv
 from langchain.agents import AgentType, initialize_agent, load_tools
@@ -44,6 +47,31 @@ class CustomPromptTemplate(BaseChatPromptTemplate):
         formatted = self.template.format(**kwargs)
         return [HumanMessage(content=formatted)]
 
+def run_command(command):
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+
+    if process.returncode != 0:
+        print(f"Error executing command: {command}")
+        print(f"Error: {stderr.decode('utf-8')}")
+        exit(0)
+    else:
+        print(f"Command executed successfully: {command}")
+        print(f"Output: {stdout.decode('utf-8')}")
+
+    return stdout.decode('utf-8')
+
+def replace_placeholder(command, value, cache):
+    start = command.find("<")
+    end = command.find(">")
+
+    if start != -1 and end != -1:
+        key = command[start+1:end]
+        cache[key] = value
+        return command[:start] + value + command[end+1:]
+    else:
+        return command
+
 init = LLMChain(
     llm=llm,
     prompt=load_prompt("init_prompt.yaml"),
@@ -56,6 +84,18 @@ chain = LLMChain(
     prompt=load_prompt("platform_prompt.yaml"),
 )
 
-steps = chain.run({"platform": platform, "build_folder": "../sample-app/dist"})
+output = chain.run({"platform": platform, "build_folder": "../sample-app/dist", "nonce": secrets.token_hex(8)})
+print(f"Output: {output}\n")
+steps = json.loads(output)
 
-print('output', steps)
+prev_cmd_output = None
+
+cache_outputs = {}
+
+for step in steps:
+    print(step["description"])
+    cmd = step["command"]
+    if "<" in cmd and ">" in cmd:
+        cmd = replace_placeholder(cmd, prev_cmd_output)
+    prev_cmd_output = run_command(cmd)
+
