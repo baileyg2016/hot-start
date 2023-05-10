@@ -15,6 +15,7 @@ template:
   For example, if a resource group is named "resource-{nonce}", then use "resource-{nonce}" in all commands.
   Just provide an array of json objects.
   The build folder is located here on my local machine {build_folder}.
+  Deploy it off the root of the resource group.
   Now provide the steps in json below.
   Bot
   

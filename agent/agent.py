@@ -1,51 +1,24 @@
 import json
 import os
+import re
 import secrets
 import subprocess
+from typing import Dict, List, Optional, Tuple, Union
 
 from dotenv import load_dotenv
-from langchain.agents import AgentType, initialize_agent, load_tools
+from langchain.agents import Tool
 from langchain.chains import LLMChain
-from langchain.llms import OpenAI
-from langchain.prompts import load_prompt
-from langchain.tools import ShellTool
-from langchain.agents import Tool, AgentExecutor, LLMSingleActionAgent, AgentOutputParser
-from langchain.prompts import BaseChatPromptTemplate
-from langchain import SerpAPIWrapper, LLMChain
 from langchain.chat_models import ChatOpenAI
-from typing import List, Union
+from langchain.llms import OpenAI
+from langchain.prompts import BaseChatPromptTemplate, load_prompt
 from langchain.schema import AgentAction, AgentFinish, HumanMessage
-import re
+from langchain.tools import ShellTool
 
 load_dotenv()
 
 tools = []
 # llm = OpenAI(temperature=0, openai_api_key=os.environ["OPENAI_API_KEY"])
 llm = ChatOpenAI(model_name="gpt-4", temperature=0, openai_api_key=os.getenv("OPENAI_API_KEY"))
-
-# Set up a prompt template
-class CustomPromptTemplate(BaseChatPromptTemplate):
-    # The template to use
-    template: str
-    # The list of tools available
-    tools: List[Tool]
-    
-    def format_messages(self, **kwargs) -> str:
-        # Get the intermediate steps (AgentAction, Observation tuples)
-        # Format them in a particular way
-        intermediate_steps = kwargs.pop("intermediate_steps")
-        thoughts = ""
-        for action, observation in intermediate_steps:
-            thoughts += action.log
-            thoughts += f"\nObservation: {observation}\nThought: "
-        # Set the agent_scratchpad variable to that value
-        kwargs["agent_scratchpad"] = thoughts
-        # Create a tools variable from the list of tools provided
-        kwargs["tools"] = "\n".join([f"{tool.name}: {tool.description}" for tool in self.tools])
-        # Create a list of tool names for the tools provided
-        kwargs["tool_names"] = ", ".join([tool.name for tool in self.tools])
-        formatted = self.template.format(**kwargs)
-        return [HumanMessage(content=formatted)]
 
 def run_command(command):
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -61,13 +34,20 @@ def run_command(command):
 
     return stdout.decode('utf-8')
 
-def replace_placeholder(command, value, cache):
+def find_key(command):
+    start = command.find("<")
+    end = command.find(">")
+
+    return command[start+1:end] if start != -1 and end != -1 else None
+
+def replace_placeholder(command, value, cache=None):
     start = command.find("<")
     end = command.find(">")
 
     if start != -1 and end != -1:
         key = command[start+1:end]
-        cache[key] = value
+        if cache is not None:
+            cache[key] = value
         return command[:start] + value + command[end+1:]
     else:
         return command
@@ -95,7 +75,12 @@ cache_outputs = {}
 for step in steps:
     print(step["description"])
     cmd = step["command"]
+
     if "<" in cmd and ">" in cmd:
-        cmd = replace_placeholder(cmd, prev_cmd_output)
+        key = find_key(cmd)
+        if key in cache_outputs:
+            cmd = replace_placeholder(cmd, cache_outputs[key])
+        else:
+            cmd = replace_placeholder(cmd, prev_cmd_output, cache_outputs)
     prev_cmd_output = run_command(cmd)
 
