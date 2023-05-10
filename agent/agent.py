@@ -57,7 +57,8 @@ init = LLMChain(
     prompt=load_prompt("init_prompt.yaml"),
 )
 
-platform = init.run("I want to deploy a react app with Azure")
+platform = init.run("I want to deploy a react app with AWS")
+print(f"Platform: {platform}\n")
 
 chain = LLMChain(
     llm=llm,
