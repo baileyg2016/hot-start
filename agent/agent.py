@@ -11,7 +11,6 @@ from executor import Executor
 load_dotenv()
 
 tools = []
-# llm = OpenAI(temperature=0, openai_api_key=os.environ["OPENAI_API_KEY"])
 llm = ChatOpenAI(model_name="gpt-4", temperature=0, openai_api_key=os.getenv("OPENAI_API_KEY"))
 
 init = LLMChain(

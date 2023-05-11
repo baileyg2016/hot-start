@@ -1,0 +1,7 @@
+colorama
+faiss
+langchain
+openai
+pydantic
+streamlit
+termcolor
