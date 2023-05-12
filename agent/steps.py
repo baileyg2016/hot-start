@@ -6,11 +6,10 @@ from langchain.prompts import load_prompt
 from utils import log
 import json
 
-
 class Step:
     def __init__(self, description, command):
         self.description = description
-        self.command = command
+        self.command = command.replace("\'", "\"")
         self.key = self.find_key()
         
 
@@ -65,8 +64,5 @@ class Step:
         log(f"Fixing with: {self.description}", "yellow")
         log(f"Found a new command: {output}", "yellow")
 
-    
-
-    
 def load_steps(steps):
     return [Step(step["description"], step["command"]) for step in steps]

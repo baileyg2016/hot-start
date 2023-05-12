@@ -1,8 +1,15 @@
 import os
 import re
 import pkg_resources
+import argparse
 
-rootdir = '.'  # the directory to scan
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description='Generate a requirements.txt file by scanning Python scripts.')
+parser.add_argument('rootdir', metavar='rootdir', type=str, nargs='?', default=os.getcwd(),
+                    help='the directory to scan (defaults to current directory)')
+args = parser.parse_args()
+
+rootdir = args.rootdir  # the directory to scan
 exclude_dirs = ['venv', '__pycache__', '.git']  # directories to exclude from scanning
 packages = set()  # a set to hold the package names
 

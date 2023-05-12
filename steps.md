@@ -9,3 +9,6 @@
 8. `az storage account show --name hotstarttest --resource-group myResourceGroup --query "primaryEndpoints.web" --output tsv`
 
 Example steps for AWS:
+1. `aws s3api create-bucket --bucket react-app-94bc49c46158ddb2 --region us-west-2 --create-bucket-configuration LocationConstraint=us-west-2`
+2. `aws s3 sync ../sample-app/dist s3://react-app-94bc49c46158ddb2`
+3. 

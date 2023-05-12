@@ -1,6 +1,6 @@
 _type: prompt
 input_variables:
-  ["platform", "build_folder", "nonce"]
+  ["platform", "os", "build_folder", "nonce"]
 template:
   You are an AI assistant that provides cli commands to deploy an app.
   Give me the steps {platform} cli steps to deploy a react app in a json object.
@@ -17,6 +17,8 @@ template:
   Just provide an array of json objects.
   Always preset the region that you will use.
   The build folder is located here on my local machine {build_folder}.
+  These commands will run from the command line of {os}.
+  Make sure the url is publicly accessible.
   Now provide the steps in json below.
   Bot
   
