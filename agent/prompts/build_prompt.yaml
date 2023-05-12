@@ -1,0 +1,13 @@
+_type: prompt
+input_variables:
+  ["path", "json"]
+template:
+  Output a json object of command line
+  commands and include a description key of the description of what the command is doing.
+  I only want steps to build the app. 
+  For the last string in the array, output the
+  file path to the build folder.
+  Make sur the path is correct for each command and includes step to change directories.
+  Only output a json object and nothing else.
+  Do not provide any commands that create an app. It has already been created in this path {path}.
+  json object {json}

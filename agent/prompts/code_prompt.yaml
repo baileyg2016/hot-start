@@ -1,0 +1,12 @@
+_type: prompt
+input_variables:
+  ["input"]
+template:
+  You are an AI assistant that will create a react app.
+  Provide all of the code to create the react app.
+  Output everything in a json object.
+  The key will be the path to the file and the value will be the contents of the file.
+  Only output code, no comments, or any additional text besides the code itself.
+  Include all of the project code
+  Take into account the users input "{input}".
+  

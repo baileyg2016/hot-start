@@ -20,5 +20,6 @@ template:
   These commands will run from the command line of {os}.
   Make sure the url is publicly accessible.
   Now provide the steps in json below.
+  Use the $web storage container.
   Bot
   

@@ -1,56 +1,38 @@
-from datetime import datetime
+import json
+import os
 
-import faiss
-from langchain.chains import ConversationChain
-from langchain.docstore import InMemoryDocstore
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.llms import OpenAI
-from langchain.memory import VectorStoreRetrieverMemory
-from langchain.prompts import PromptTemplate
-from langchain.vectorstores import FAISS
 from dotenv import load_dotenv
-from customvectorstore import CustomVectorStoreRetrieverMemory
+from langchain.chains import LLMChain
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import load_prompt
+from utils import log
 
+# need this for API key
 load_dotenv()
 
-embedding_size = 1536 # Dimensions of the OpenAIEmbeddings
-index = faiss.IndexFlatL2(embedding_size)
-embedding_fn = OpenAIEmbeddings().embed_query
-vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
-
-# In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
-# the vector lookup still returns the semantically relevant information
-retriever = vectorstore.as_retriever(search_kwargs=dict(k=3))
-memory = CustomVectorStoreRetrieverMemory(retriever=retriever)
-
-memory.save_context({"human": "My favorite food is pizza"}, {"AI": "thats good to know"})
-memory.save_context({"human": "My favorite sport is soccer"}, {"AI": "..."})
-memory.save_context({"human": "I don't the Celtics"}, {"AI": "ok"})
-
-llm = OpenAI(temperature=0) # Can be any valid LLM
-_DEFAULT_TEMPLATE = """The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.
-
-Relevant pieces of previous conversation:
-{history}
-
-(You do not need to use these pieces of information if not relevant)
-
-Current conversation:
-Human: {input}
-AI:"""
-PROMPT = PromptTemplate(
-    input_variables=["history", "input"], template=_DEFAULT_TEMPLATE
-)
-conversation_with_summary = ConversationChain(
-    llm=llm, 
-    prompt=PROMPT,
-    # We set a very low max_token_limit for the purposes of testing.
-    memory=memory,
+code_chain = LLMChain(
+    llm=ChatOpenAI(temperature=0, model_name="gpt-4"), 
+    prompt=load_prompt("prompts/code_prompt.yaml"),
     verbose=True
 )
 
-print(memory.memory_variables)
+steps_chain = LLMChain(
+    llm=ChatOpenAI(temperature=0, model_name="gpt-4"),
+    prompt=load_prompt("prompts/build_prompt.yaml"),
+)
 
-print(conversation_with_summary.predict(input="Hi, my name is Perry, what's up?"))
-print(conversation_with_summary.predict(input="what do i like and dont like?"))
-# print(conversation_with_summary.)
+
+output = code_chain.run("I want the app to output a smily face")
+data = json.loads(output)
+path = 'web'
+os.makedirs(path, exist_ok=True)
+log(output, "green")
+for file_path, content in data.items():
+    os.makedirs(os.path.join(path, os.path.dirname(file_path)), exist_ok=True)
+
+    with open(os.path.join(path, file_path), 'w') as f:
+        f.write(content)
+
+log("Getting steps\n", "green")
+steps = steps_chain.run({ "path": path, "json": output })
+print(steps)

@@ -4,8 +4,6 @@ import platform
 import secrets
 
 import faiss
-# from CustomChain import MyCustomChain
-from customvectorstore import CustomVectorStoreRetrieverMemory
 from langchain.chains import ConversationChain, LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.docstore import InMemoryDocstore
