@@ -28,7 +28,7 @@ class Executor:
         # the vector lookup still returns the semantically relevant information
         # TODO: ideally k is 2. Wonder if we can use an SVM
         retriever = vectorstore.as_retriever(search_kwargs=dict(k=2), search_type="mmr")
-        self.memory = VectorStoreRetrieverMemory(retriever=retriever, input_key="input")# VectorStoreRetrieverMemory(retriever=retriever)
+        self.memory = VectorStoreRetrieverMemory(retriever=retriever, input_key="input")
 
         llm = ChatOpenAI(model_name="gpt-4", temperature=0)
         self.chain = LLMChain(
@@ -51,6 +51,6 @@ class Executor:
                 json.dump(json_steps, f, indent=4)
 
         for step in steps:
-            step.exe(platform, self.memory)
+            success, output = step.exe(platform, self.memory)
 
-        print("Done")
+        print(f"Done you can visit here: {output}")
