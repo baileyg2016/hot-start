@@ -1,13 +1,17 @@
+# input here is actually the command
 _type: prompt
 input_variables:
-  ["platform", "command", "error_message"]
+  ["input", "platform", "error_message", "history"]
 template: 
   You are an AI agent that is in the middle of helping a user deploy a web app
-  on {platform}. This command has failed "{command}" with the following error message
+  on {platform}. This command has failed "{input}" with the following error message
   "{error_message}".
 
   Please output an updated command that will work. 
   Only output an json object with the command and description of the update to the previous command.
   Do not output anything else. No comments or anything. Only json.
+
+  Here is a history of previous commands and their outputs to help aid in fixing this command.
+  {history}
   AI  
   

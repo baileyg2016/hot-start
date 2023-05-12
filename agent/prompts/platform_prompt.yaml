@@ -20,10 +20,5 @@ template:
   These commands will run from the command line of {os}.
   Make sure the url is publicly accessible.
   Now provide the steps in json below.
-
-  Relevant pieces of previous conversation below
-  
-  (You do not need to use these pieces of information if not relevant)
-
   Bot
   

@@ -9,6 +9,7 @@ from langchain.memory import VectorStoreRetrieverMemory
 from langchain.prompts import PromptTemplate
 from langchain.vectorstores import FAISS
 from dotenv import load_dotenv
+from customvectorstore import CustomVectorStoreRetrieverMemory
 
 load_dotenv()
 
@@ -20,7 +21,7 @@ vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 # In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
 # the vector lookup still returns the semantically relevant information
 retriever = vectorstore.as_retriever(search_kwargs=dict(k=3))
-memory = VectorStoreRetrieverMemory(retriever=retriever)
+memory = CustomVectorStoreRetrieverMemory(retriever=retriever)
 
 memory.save_context({"human": "My favorite food is pizza"}, {"AI": "thats good to know"})
 memory.save_context({"human": "My favorite sport is soccer"}, {"AI": "..."})

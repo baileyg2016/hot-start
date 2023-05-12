@@ -12,6 +12,15 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "cwd": "${workspaceFolder}/agent"
+        },
+        {
+            "name": "Python: Scratch Pad",
+            "type": "python",
+            "request": "launch",
+            "program": "scratchpad.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}/agent"
         }
     ]
 }

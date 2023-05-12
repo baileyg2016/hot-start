@@ -1,30 +1,30 @@
 [
     {
         "description": "Create a resource group",
-        "command": "az group create --name resource-50bd7375411831c0 --location eastus"
+        "command": "az group create --name resource-117de92b0c469bbb --location eastus"
     },
     {
         "description": "Create a storage account",
-        "command": "az storage account create --name storage50bd7375411831c0 --resource-group resource-50bd7375411831c0 --location eastus --sku Standard_LRS --kind StorageV2"
+        "command": "az storage account create --name storage117de92b0c469bbb --resource-group resource-117de92b0c469bbb --location eastus --sku Standard_LRS --kind StorageV2"
     },
     {
         "description": "Get the storage account connection string",
-        "command": "az storage account show-connection-string --name storage50bd7375411831c0 --resource-group resource-50bd7375411831c0 --output tsv"
+        "command": "az storage account show-connection-string --name storage117de92b0c469bbb --resource-group resource-117de92b0c469bbb --output tsv"
     },
     {
         "description": "Create a container in the storage account",
-        "command": "az storage container create --name reactapp --account-name storage50bd7375411831c0 --public-access blob --connection-string <connection_string>"
+        "command": "az storage container create --name reactapp --account-name storage117de92b0c469bbb --public-access blob --connection-string <connection_string>"
     },
     {
         "description": "Upload the build folder to the container",
-        "command": "az storage blob upload-batch --destination reactapp --source ../sample-app/dist --pattern * --type block --account-name storage50bd7375411831c0 --connection-string <connection_string>"
+        "command": "az storage blob upload-batch --destination reactapp --source ../sample-app/dist --pattern * --type block --account-name storage117de92b0c469bbb --connection-string <connection_string>"
     },
     {
-        "description": "Enable static website hosting on the storage account",
-        "command": "az storage blob service-properties update --account-name storage50bd7375411831c0 --static-website --404-document 404.html --index-document index.html --connection-string <connection_string>"
+        "description": "Enable static website hosting for the storage account",
+        "command": "az storage blob service-properties update --account-name storage117de92b0c469bbb --static-website --404-document 404.html --index-document index.html --connection-string <connection_string>"
     },
     {
-        "description": "Get the primary endpoint URL",
-        "command": "az storage account show --name storage50bd7375411831c0 --resource-group resource-50bd7375411831c0 --query 'primaryEndpoints.web' --output tsv"
+        "description": "Get the primary web endpoint for the storage account",
+        "command": "az storage account show --name storage117de92b0c469bbb --resource-group resource-117de92b0c469bbb --query 'primaryEndpoints.web' --output tsv"
     }
 ]
