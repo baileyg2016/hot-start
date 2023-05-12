@@ -29,17 +29,17 @@ class Executor:
         self.chain = LLMChain(
             llm=llm,
             prompt=load_prompt("prompts/platform_prompt.yaml"),
-            memory=self.memory,
+            # memory=self.memory,
             verbose=True
         )
 
         # doing this because I am too lazy to copy and paste the code
-        self.buffer = ConversationChain(
-            llm=llm,
-            prompt=load_prompt("prompts/platform_prompt.yaml"),
-            memory=self.memory,
-            verbose=True
-        )
+        # self.buffer = ConversationChain(
+        #     llm=llm,
+        #     prompt=load_prompt("prompts/platform_prompt.yaml"),
+        #     memory=self.memory,
+        #     verbose=True
+        # )
 
         self.cached_outputs = {}
         self.os = platform.system()
@@ -50,7 +50,7 @@ class Executor:
     
     def __call__(self, platform):
         # need to figure out how to get the memory
-        output = self.chain.run({"platform": platform, "os": self.os, "build_folder": "../sample-app/dist", "nonce": secrets.token_hex(8), "history":  })
+        output = self.chain.run({"platform": platform, "os": self.os, "build_folder": "../sample-app/dist", "nonce": secrets.token_hex(8)})
         json_steps = json.loads(output)# ["steps"]
         steps = load_steps(json_steps)
         
@@ -60,4 +60,4 @@ class Executor:
         for step in steps:
             success, output = step.exe(platform)
             if success:
-                self.memory.save_context({ "input": step.command } , { "output": output })
+                self.memory.save_context({ "command": step.command } , { "command output": output })

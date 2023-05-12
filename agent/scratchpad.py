@@ -19,12 +19,12 @@ vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
 
 # In actual usage, you would set `k` to be a higher value, but we use k=1 to show that
 # the vector lookup still returns the semantically relevant information
-retriever = vectorstore.as_retriever(search_kwargs=dict(k=1))
+retriever = vectorstore.as_retriever(search_kwargs=dict(k=3))
 memory = VectorStoreRetrieverMemory(retriever=retriever)
 
-memory.save_context({"input": "My favorite food is pizza"}, {"output": "thats good to know"})
-memory.save_context({"input": "My favorite sport is soccer"}, {"output": "..."})
-memory.save_context({"input": "I don't the Celtics"}, {"output": "ok"})
+memory.save_context({"human": "My favorite food is pizza"}, {"AI": "thats good to know"})
+memory.save_context({"human": "My favorite sport is soccer"}, {"AI": "..."})
+memory.save_context({"human": "I don't the Celtics"}, {"AI": "ok"})
 
 llm = OpenAI(temperature=0) # Can be any valid LLM
 _DEFAULT_TEMPLATE = """The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. If the AI does not know the answer to a question, it truthfully says it does not know.
@@ -47,6 +47,9 @@ conversation_with_summary = ConversationChain(
     memory=memory,
     verbose=True
 )
-print(conversation_with_summary.predict(input="Hi, my name is Perry, what's up?"))
 
+print(memory.memory_variables)
+
+print(conversation_with_summary.predict(input="Hi, my name is Perry, what's up?"))
+print(conversation_with_summary.predict(input="what do i like and dont like?"))
 # print(conversation_with_summary.)

@@ -1,6 +1,6 @@
 _type: prompt
 input_variables:
-  ["platform", "os", "build_folder", "nonce", "history"]
+  ["platform", "os", "build_folder", "nonce"]
 template:
   You are an AI assistant that provides cli commands to deploy an app.
   Give me the steps {platform} cli steps to deploy a react app in a json object.
@@ -22,7 +22,7 @@ template:
   Now provide the steps in json below.
 
   Relevant pieces of previous conversation below
-  {history}
+  
   (You do not need to use these pieces of information if not relevant)
 
   Bot
