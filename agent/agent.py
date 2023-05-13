@@ -19,8 +19,7 @@ init = LLMChain(
     prompt=load_prompt("prompts/init_prompt.yaml"),
 )
 
-steps = json.loads(open("steps.json", "r").read())
-commands = [step['command'] for step in steps]
+
 # log(human.run({"platform": "AWS", "commands": commands}), "yellow")
 
 platform = "Azure" # init.run("I want to deploy a react app with AWS")
